@@ -1,4 +1,4 @@
-export const dataArray = [
+export const initialData = [
 	{
 		id: 1,
 		name: 'Bob',
