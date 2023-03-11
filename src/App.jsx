@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import { initialData } from './data'
-import { getUniqueValues } from './utils'
-
-const nameOptions = getUniqueValues(initialData, 'name')
-const companyOptions = getUniqueValues(initialData, 'company')
+import { useCallback, useMemo, useState } from 'react'
+import { CheckboxGroup } from './components'
+import { initialData, uniqueCompanies, uniqueNames } from './lib/data'
 
 function App() {
 	const [selectedNames, setSelectedNames] = useState([])
 	const [selectedCompanies, setSelectedCompanies] = useState([])
 
-	function handleCheckboxChange(value, state, setState) {
+	const handleCheckboxChange = (value, setState) => {
 		setState(prevState => {
 			if (prevState.includes(value)) {
 				return prevState.filter(item => item !== value)
@@ -20,25 +17,35 @@ function App() {
 	}
 
 	const handleNameChange = event => {
-		const { name, value } = event.target
-		if (name === 'names') {
-			handleCheckboxChange(value, selectedNames, setSelectedNames)
-		} else if (name === 'companies') {
-			handleCheckboxChange(value, selectedCompanies, setSelectedCompanies)
-		}
+		const { value } = event.target
+		handleCheckboxChange(value, setSelectedNames)
 	}
 
-	const filteredData = initialData.filter(item => {
-		let nameMatch = selectedNames.length === 0
-		let companyMatch = selectedCompanies.length === 0
-		if (selectedNames.length > 0) {
-			nameMatch = selectedNames.includes(item.name)
+	const handleCompanyChange = event => {
+		const { value } = event.target
+		handleCheckboxChange(value, setSelectedCompanies)
+	}
+
+	const filteredData = useMemo(() => {
+		if (selectedNames.length === 0 && selectedCompanies.length === 0) {
+			return initialData
 		}
-		if (selectedCompanies.length > 0) {
-			companyMatch = selectedCompanies.includes(item.company)
-		}
-		return nameMatch && companyMatch
-	})
+
+		return initialData.filter(item => {
+			let nameMatch = selectedNames.length === 0
+			let companyMatch = selectedCompanies.length === 0
+
+			if (selectedNames.length > 0) {
+				nameMatch = selectedNames.includes(item.name)
+			}
+
+			if (selectedCompanies.length > 0) {
+				companyMatch = selectedCompanies.includes(item.company)
+			}
+
+			return nameMatch && companyMatch
+		})
+	}, [initialData, selectedNames, selectedCompanies])
 
 	return (
 		<div className="container mx-auto my-8 max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
@@ -48,40 +55,20 @@ function App() {
 
 			<div>
 				<h3>Names</h3>
-				<div className="flex gap-x-2">
-					{nameOptions.map((name, index) => (
-						<div key={index} className="space-x-1">
-							<input
-								type="checkbox"
-								id={`name-${name}`}
-								name="names"
-								value={name}
-								checked={selectedNames.includes(name)}
-								onChange={handleNameChange}
-							/>
-							<label htmlFor={`name-${name}`}>{name}</label>
-						</div>
-					))}
-				</div>
+				<CheckboxGroup
+					options={uniqueNames}
+					selectedValues={selectedNames}
+					handleChange={handleNameChange}
+				/>
 			</div>
 
 			<div>
 				<h3>Companies</h3>
-				<div className="flex gap-x-2">
-					{companyOptions.map((company, index) => (
-						<div key={index} className="space-x-1">
-							<input
-								type="checkbox"
-								id={`company-${company}`}
-								name="companies"
-								value={company}
-								checked={selectedCompanies.includes(company)}
-								onChange={handleNameChange}
-							/>
-							<label htmlFor={`company-${company}`}>{company}</label>
-						</div>
-					))}
-				</div>
+				<CheckboxGroup
+					options={uniqueCompanies}
+					selectedValues={selectedCompanies}
+					handleChange={handleCompanyChange}
+				/>
 			</div>
 
 			<div className="overflow-x-auto">

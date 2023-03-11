@@ -1,3 +1,5 @@
+import { getUniqueValues } from './utils'
+
 export const initialData = [
 	{
 		id: 1,
@@ -140,3 +142,6 @@ export const initialData = [
 		active: 3,
 	},
 ]
+
+export const uniqueNames = getUniqueValues(initialData, 'name')
+export const uniqueCompanies = getUniqueValues(initialData, 'company')
