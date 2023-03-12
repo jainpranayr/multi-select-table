@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react'
-import { CheckboxGroup } from './components'
+import { useMemo, useState } from 'react'
+import { MultiSelectAutoCompleteDropdown } from './components'
 import { initialData, uniqueCompanies, uniqueNames } from './lib/data'
 
 function App() {
@@ -16,14 +16,12 @@ function App() {
 		})
 	}
 
-	const handleNameChange = event => {
-		const { value } = event.target
-		handleCheckboxChange(value, setSelectedNames)
+	const handleNameChange = selected => {
+		setSelectedNames(selected)
 	}
 
-	const handleCompanyChange = event => {
-		const { value } = event.target
-		handleCheckboxChange(value, setSelectedCompanies)
+	const handleCompanyChange = selected => {
+		setSelectedCompanies(selected)
 	}
 
 	const filteredData = useMemo(() => {
@@ -48,35 +46,32 @@ function App() {
 	}, [initialData, selectedNames, selectedCompanies])
 
 	return (
-		<div className="container mx-auto my-8 max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
+		<div className="container mx-auto my-8 max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
 			<h1 className="font-sans font-semibold text-gray-600 sm:text-xl md:text-4xl">
 				Customer Details
 			</h1>
 
-			<div>
-				<h3>Names</h3>
-				<CheckboxGroup
-					options={uniqueNames}
-					selectedValues={selectedNames}
-					handleChange={handleNameChange}
-				/>
-			</div>
-
-			<div>
-				<h3>Companies</h3>
-				<CheckboxGroup
-					options={uniqueCompanies}
-					selectedValues={selectedCompanies}
-					handleChange={handleCompanyChange}
-				/>
-			</div>
-
-			<div className="overflow-x-auto">
+			<div className="min-h-screen overflow-x-auto">
 				<table className="font-gray-700 min-w-full divide-y divide-gray-300 text-center text-base">
 					<thead>
 						<tr className="font-semibold">
-							<th className="py-4 px-3">Name ▼</th>
-							<th className="py-4 px-3">Company ▼</th>
+							<th className="py-4 px-3">
+								<MultiSelectAutoCompleteDropdown
+									label="Name ▼"
+									handleChange={handleNameChange}
+									options={uniqueNames}
+									selectedValues={selectedNames}
+								/>
+							</th>
+							<th className="py-4 px-3">
+								<MultiSelectAutoCompleteDropdown
+									label="Company ▼"
+									options={uniqueCompanies}
+									selectedValues={selectedCompanies}
+									handleChange={handleCompanyChange}
+									multiSelect={true}
+								/>
+							</th>
 							<th className="py-4 px-3">Total Projects</th>
 							<th className="py-4 px-3">Active Projects</th>
 						</tr>
