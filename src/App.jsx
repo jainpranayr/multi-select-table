@@ -6,16 +6,6 @@ function App() {
 	const [selectedNames, setSelectedNames] = useState([])
 	const [selectedCompanies, setSelectedCompanies] = useState([])
 
-	const handleCheckboxChange = (value, setState) => {
-		setState(prevState => {
-			if (prevState.includes(value)) {
-				return prevState.filter(item => item !== value)
-			} else {
-				return [...prevState, value]
-			}
-		})
-	}
-
 	const handleNameChange = selected => {
 		setSelectedNames(selected)
 	}

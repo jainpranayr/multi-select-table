@@ -54,7 +54,7 @@ function MultiSelectAutocompleteDropdown({
 	}
 
 	return (
-		<div className="relative">
+		<div className="relative w-full min-w-max">
 			<input
 				type="text"
 				value={inputValue}
