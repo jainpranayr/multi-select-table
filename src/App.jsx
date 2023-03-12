@@ -3,9 +3,11 @@ import { MultiSelectAutoCompleteDropdown } from './components'
 import { initialData, uniqueCompanies, uniqueNames } from './lib/data'
 
 function App() {
+	// Declare state variables and their corresponding update functions.
 	const [selectedNames, setSelectedNames] = useState([])
 	const [selectedCompanies, setSelectedCompanies] = useState([])
 
+	// Define change handlers for the dropdowns.
 	const handleNameChange = selected => {
 		setSelectedNames(selected)
 	}
@@ -14,6 +16,7 @@ function App() {
 		setSelectedCompanies(selected)
 	}
 
+	// Memoize the filtered data based on changes to the selected names and companies.
 	const filteredData = useMemo(() => {
 		if (selectedNames.length === 0 && selectedCompanies.length === 0) {
 			return initialData
@@ -35,6 +38,7 @@ function App() {
 		})
 	}, [initialData, selectedNames, selectedCompanies])
 
+	// Render the component.
 	return (
 		<div className="container mx-auto my-8 max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
 			<h1 className="font-sans font-semibold text-gray-600 sm:text-xl md:text-4xl">
@@ -45,6 +49,7 @@ function App() {
 				<table className="font-gray-700 min-w-full divide-y divide-gray-300 text-center text-base">
 					<thead>
 						<tr className="font-semibold">
+							{/* Render the name dropdown */}
 							<th className="py-4 px-3">
 								<MultiSelectAutoCompleteDropdown
 									label="Name ▼"
@@ -53,6 +58,7 @@ function App() {
 									selectedValues={selectedNames}
 								/>
 							</th>
+							{/* Render the company dropdown */}
 							<th className="py-4 px-3">
 								<MultiSelectAutoCompleteDropdown
 									label="Company ▼"
@@ -67,6 +73,7 @@ function App() {
 						</tr>
 					</thead>
 
+					{/* Render the rows of the table */}
 					<tbody className="divide-y divide-gray-200">
 						{filteredData.map(row => (
 							<tr key={row.id}>

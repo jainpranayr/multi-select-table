@@ -8,37 +8,46 @@ function MultiSelectAutocompleteDropdown({
 	selectedValues,
 	handleChange,
 }) {
+	// Declare state variables for the input value and dropdown visibility
 	const [inputValue, setInputValue] = useState('')
 	const [isOpen, setIsOpen] = useState(false)
+
+	// Create a reference for the dropdown container element
 	const dropdownRef = useRef(null)
 
+	// Call the useOnClickOutside hook to close the dropdown when clicked outside
 	useOnClickOutside(dropdownRef, () => {
 		setIsOpen(false)
 	})
 
+	// Memoize the filtered options based on the current input value and options list
 	const filteredOptions = useMemo(() => {
 		return options.filter(option =>
 			option.toLowerCase().includes(inputValue.toLowerCase())
 		)
 	}, [options, inputValue])
 
+	// Update the input value and open the dropdown when text is entered into the input field
 	const handleInputChange = e => {
 		setInputValue(e.target.value)
 		setIsOpen(true)
 	}
 
+	// Add a selected option to the list of values and close the dropdown when clicked
 	const handleOptionClick = option => {
 		handleChange([...selectedValues, option])
 		setInputValue('')
 		setIsOpen(false)
 	}
 
+	// Remove a selected option from the list of values and close the dropdown when clicked
 	const handleTagCloseClick = option => {
 		handleChange(selectedValues.filter(value => value !== option))
 		setInputValue('')
 		setIsOpen(false)
 	}
 
+	// Render a single dropdown option with a close button if already selected
 	const renderOption = option => {
 		const isSelected = selectedValues.includes(option)
 
@@ -59,6 +68,7 @@ function MultiSelectAutocompleteDropdown({
 		)
 	}
 
+	// Render the component with an input field and a dropdown list of options
 	return (
 		<div className="relative w-full min-w-max">
 			<input
