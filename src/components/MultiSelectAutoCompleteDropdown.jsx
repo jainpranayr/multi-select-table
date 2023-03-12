@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { CloseIcon } from '../assets/icons'
+import useOnClickOutside from '../hooks/useOnClickOutside'
 
 function MultiSelectAutocompleteDropdown({
 	label,
@@ -9,6 +10,11 @@ function MultiSelectAutocompleteDropdown({
 }) {
 	const [inputValue, setInputValue] = useState('')
 	const [isOpen, setIsOpen] = useState(false)
+	const dropdownRef = useRef(null)
+
+	useOnClickOutside(dropdownRef, () => {
+		setIsOpen(false)
+	})
 
 	const filteredOptions = useMemo(() => {
 		return options.filter(option =>
@@ -64,7 +70,9 @@ function MultiSelectAutocompleteDropdown({
 				className="mt-2 w-full rounded-md border border-none border-gray-300 px-3 py-2 text-center outline-none placeholder:text-blue-500"
 			/>
 			{isOpen && (
-				<div className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white">
+				<div
+					className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white"
+					ref={dropdownRef}>
 					{filteredOptions.map(renderOption)}
 				</div>
 			)}
